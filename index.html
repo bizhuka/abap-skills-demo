@@ -87,7 +87,7 @@ button:focus-visible, input:focus-visible, nav.tabs a:focus-visible { outline: 2
 <div class="shell">
   <nav class="tabs" aria-label="Guides">
     <div class="brand">ABAP Skills Demo</div>
-    <a href="#demo" data-tab="demo"><span>Skills demo</span><span class="cnt"></span></a><a href="#badi" data-tab="badi"><span>BAdI boilerplate</span><span class="cnt"></span></a>
+    <a href="#demo" data-tab="demo"><span>Skills demo</span><span class="cnt"></span></a><a href="#badi" data-tab="badi"><span>BADI boilerplate</span><span class="cnt"></span></a>
   </nav>
   <main>
     
@@ -112,7 +112,7 @@ button:focus-visible, input:focus-visible, nav.tabs a:focus-visible { outline: 2
 <section class="step" id="demo-step-2">
   <div class="cell prompt">
     <div class="steph"><span class="num">2</span><h2>Create a temporary package</h2></div>
-    <pre class="ptext" id="demo-p2">abap-fs dev-200: create the temporary package $ZSKILL_DEMO with the description &quot;Copilot skills demo&quot;. First check whether it already exists; if it does, change nothing.</pre>
+    <pre class="ptext" id="demo-p2">On DEV-200, create the temporary package $ZSKILL_DEMO with the description &quot;Copilot skills demo&quot;. First check whether it already exists; if it does, change nothing.</pre>
     <button type="button" class="copy" data-target="demo-p2">Copy prompt</button>
   </div>
   <div class="cell expect">
@@ -233,7 +233,7 @@ button:focus-visible, input:focus-visible, nav.tabs a:focus-visible { outline: 2
   <div class="compare"><h3>Compare without skills</h3><p>To see the difference, run the same steps once more without skills: rename <code>%USERPROFILE%\.agents\skills</code> to <code>skills-off</code>, reload VS Code, use new names (e.g. <code>$ZSKILL_DEMO2</code>, <code>ZCL_SKILL_DEMO2</code>), and compare the ticks. Rename it back afterwards.</p></div>
 </div>
 <div class="panel" data-tab="badi" id="panel-badi">
-  <header><h1>BAdI boilerplate</h1><p class="intro">One prompt creates a complete BAdI with an implicit enhancement: interface, enhancement spot and BAdI definition, implementing class, BAdI implementation with filter, the enhancement in your FORM, and the exit row. Copilot does it by running report ZBADI_GENERATOR (skill abap-badi-boilerplate).</p></header>
+  <header><h1>BADI boilerplate</h1><p class="intro">One prompt creates a complete BADI with an implicit enhancement: interface, enhancement spot and BADI definition, implementing class, BADI implementation with filter, the enhancement in your FORM, and the exit row. Copilot does it by running report ZBADI_GENERATOR (skill abap-badi-boilerplate).</p></header>
   <div class="setup"><h3>Before you start</h3><ol><li>Same setup as the skills demo: DEV-200 connected, chat in <strong>Local</strong> mode (or the Copilot CLI from a local folder).</li><li>Pick an unused dev ID and exit ID. The generator creates the local package <code>$&lt;PREFIX&gt;_&lt;DEV_ID&gt;</code>; a name that was used before can fail with “already versioned”.</li><li>The run writes objects and a <code>ZCONFIG_EXIT1</code> row in the logged-on client (200). There is no delete tool, so use test names.</li></ol></div>
   <div class="bar"><div class="progress" aria-hidden="true"><div></div></div><span class="count">0 checked</span>
     <button type="button" class="ghost reset">Clear ticks</button></div>
@@ -252,10 +252,8 @@ button:focus-visible, input:focus-visible, nav.tabs a:focus-visible { outline: 2
 </section>
 <section class="step" id="badi-step-2">
   <div class="cell prompt">
-    <div class="steph"><span class="num">2</span><h2>Create the BAdI boilerplate</h2></div>
-    <pre class="ptext" id="badi-p2">abap-fs dev-200
-
-Create a new BAdI boilerplate:
+    <div class="steph"><span class="num">2</span><h2>Create the BADI boilerplate</h2></div>
+    <pre class="ptext" id="badi-p2">Create a new BADI boilerplate on DEV-200:
 - prefix OTC, dev ID TST_BD2
 - enhancement at the beginning of FORM TEST_FORM5 in program ZTEST_BOILERPLATE
 - exit ID ZTEST_BP_ABC1, fields BUKRS, ticket DEMO-2</pre>
@@ -269,7 +267,7 @@ Create a new BAdI boilerplate:
 <section class="step" id="badi-step-3">
   <div class="cell prompt">
     <div class="steph"><span class="num">3</span><h2>Look at the generated code</h2></div>
-    <pre class="ptext" id="badi-p3">abap-fs dev-200: open the new class ZCL_OTC_TST_BD2 and the enhancement ZIENH_OTC_TST_BD2 in VS Code and summarise what each one contains. Do not change anything.</pre>
+    <pre class="ptext" id="badi-p3">Open the new class ZCL_OTC_TST_BD2 and the enhancement ZIENH_OTC_TST_BD2 in VS Code and summarise what each one contains. Do not change anything.</pre>
     <button type="button" class="copy" data-target="badi-p3">Copy prompt</button>
   </div>
   <div class="cell expect">
@@ -280,15 +278,15 @@ Create a new BAdI boilerplate:
 <section class="step" id="badi-step-4">
   <div class="cell prompt">
     <div class="steph"><span class="num">4</span><h2>Ask what config is missing</h2></div>
-    <pre class="ptext" id="badi-p4">What configuration is still needed so that the new BAdI from exit ZTEST_BP_ABC1 is actually called for company code 1000? Answer only, do not change anything.</pre>
+    <pre class="ptext" id="badi-p4">What configuration is still needed so that the new BADI from exit ZTEST_BP_ABC1 is actually called for company code 1000? Answer only, do not change anything.</pre>
     <button type="button" class="copy" data-target="badi-p4">Copy prompt</button>
   </div>
   <div class="cell expect">
     <div class="chips"><span class="chip">abap-company-config</span></div>
-    <ul class="checks"><li><label><input type="checkbox" id="badi-s4e1" data-k="badi-s4e1"><span>A ZCONFIG_EXIT2 row: EXITID, FIELDVALUE1 = 1000, ENHTYPE B, CLASSNAME = the BAdI definition, BADI_FILTER = the implementation filter, ACTIVE_FLAG X.</span></label></li><li><label><input type="checkbox" id="badi-s4e2" data-k="badi-s4e2"><span>Put the row on a transport by hand (R3TR TABU ZCONFIG_EXIT2).</span></label></li><li><label><input type="checkbox" id="badi-s4e3" data-k="badi-s4e3"><span>Spots that iv_fval1 is commented out in the enhancement, so a filled 1000 would never match.</span></label></li><li><label><input type="checkbox" id="badi-s4e4" data-k="badi-s4e4"><span>Mentions the BREAK-POINT stub and that GET_EXITS buffers per session.</span></label></li></ul>
+    <ul class="checks"><li><label><input type="checkbox" id="badi-s4e1" data-k="badi-s4e1"><span>A ZCONFIG_EXIT2 row: EXITID, FIELDVALUE1 = 1000, ENHTYPE B, CLASSNAME = the BADI definition, BADI_FILTER = the implementation filter, ACTIVE_FLAG X.</span></label></li><li><label><input type="checkbox" id="badi-s4e2" data-k="badi-s4e2"><span>Put the row on a transport by hand (R3TR TABU ZCONFIG_EXIT2).</span></label></li><li><label><input type="checkbox" id="badi-s4e3" data-k="badi-s4e3"><span>Spots that iv_fval1 is commented out in the enhancement, so a filled 1000 would never match.</span></label></li><li><label><input type="checkbox" id="badi-s4e4" data-k="badi-s4e4"><span>Mentions the BREAK-POINT stub and that GET_EXITS buffers per session.</span></label></li></ul>
   </div>
 </section></div>
-  <div class="compare"><h3>Why a skill for this</h3><p>Creating a BAdI by hand means SE24, SE18, SE19, an implicit enhancement and an SM30 row, in the right order. The skill turns that into one report run with a dry run first and SQL checks at the end, and it stops cleanly when something is wrong.</p></div>
+  <div class="compare"><h3>Why a skill for this</h3><p>Creating a BADI by hand means SE24, SE18, SE19, an implicit enhancement and an SM30 row, in the right order. The skill turns that into one report run with a dry run first and SQL checks at the end, and it stops cleanly when something is wrong.</p></div>
 </div>
   </main>
 </div>
