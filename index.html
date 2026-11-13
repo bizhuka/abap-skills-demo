@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}[hidden]{display:none!important}</style>
+</head>
+<body>
+<title>ABAP Skills Demo</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: one runbook column; each step is a two-column row: prompt | expected results */
+:root {
+  --bg: #f6f7f9; --surface: #ffffff; --fg: #1d2330; --muted: #5d6677; --line: #dde1e8;
+  --accent: #0b6e8a; --accent-soft: #e3f1f5; --done: #2f7d4f; --code-bg: #f1f3f6;
+  --sans: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --mono: "IBM Plex Mono", Consolas, "Courier New", monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #12161d; --surface: #1a2029; --fg: #e3e7ee; --muted: #9aa4b5; --line: #2c3442;
+  --accent: #4fb3cf; --accent-soft: #17323b; --done: #5fbf86; --code-bg: #222935; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #12161d; --surface: #1a2029; --fg: #e3e7ee; --muted: #9aa4b5; --line: #2c3442;
+  --accent: #4fb3cf; --accent-soft: #17323b; --done: #5fbf86; --code-bg: #222935; color-scheme: dark }
+
+body { background: var(--bg); color: var(--fg); font-family: var(--sans); font-size: 15px; line-height: 1.5;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 28px 48px; }
+.wrap { max-width: 1120px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; }
+header { display: flex; flex-direction: column; gap: 10px; }
+h1 { font-size: 26px; font-weight: 600; margin: 0; text-wrap: balance; }
+.intro { color: var(--muted); max-width: 72ch; margin: 0; }
+code { font-family: var(--mono); font-size: 0.9em; background: var(--code-bg); padding: 1px 5px; border-radius: 4px; }
+.setup { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 14px 18px; }
+.setup h3, .compare h3 { margin: 0 0 6px; font-size: 13px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); font-weight: 600; }
+.setup ol { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 4px; }
+.bar { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+.progress { flex: 1 1 220px; height: 8px; background: var(--line); border-radius: 99px; overflow: hidden; }
+.progress > div { height: 100%; width: 0; background: var(--done); transition: width .2s; }
+.count { font-variant-numeric: tabular-nums; color: var(--muted); font-size: 14px; }
+.ghost { background: none; border: 1px solid var(--line); color: var(--muted); border-radius: 6px; padding: 4px 10px; font: inherit; font-size: 13px; cursor: pointer; }
+.colhead { display: grid; grid-template-columns: 1fr 1fr; gap: 0; position: sticky; top: env(safe-area-inset-top, 0px); z-index: 2;
+  background: var(--bg); border-bottom: 2px solid var(--fg); font-size: 12px; text-transform: uppercase; letter-spacing: .08em; font-weight: 600; }
+.colhead div { padding: 8px 16px; }
+.steps { display: flex; flex-direction: column; gap: 12px; }
+.step { display: grid; grid-template-columns: 1fr 1fr; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; }
+.step.complete { border-color: var(--done); }
+.cell { padding: 16px; min-width: 0; display: flex; flex-direction: column; gap: 10px; }
+.cell.expect { border-left: 1px solid var(--line); }
+.steph { display: flex; align-items: center; gap: 10px; }
+.num { font-family: var(--mono); font-weight: 500; font-size: 13px; width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center;
+  background: var(--accent-soft); color: var(--accent); flex: none; }
+.step.complete .num { background: var(--done); color: var(--surface); }
+h2 { font-size: 16px; font-weight: 600; margin: 0; }
+.ptext { margin: 0; font-family: var(--mono); font-size: 13.5px; white-space: pre-wrap; word-break: break-word; background: var(--code-bg);
+  border: 1px solid var(--line); border-radius: 6px; padding: 12px; color: var(--fg); }
+.copy { align-self: flex-start; background: var(--accent); color: var(--surface); border: 0; border-radius: 6px; padding: 6px 14px; font: inherit; font-size: 14px; font-weight: 500; cursor: pointer; }
+.copy.ok { background: var(--done); }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { font-family: var(--mono); font-size: 12px; padding: 2px 8px; border-radius: 99px; background: var(--accent-soft); color: var(--accent); }
+.checks { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.checks label { display: flex; gap: 10px; align-items: flex-start; cursor: pointer; }
+.checks input { margin-top: 4px; accent-color: var(--done); flex: none; width: 16px; height: 16px; }
+.checks input:checked + span { color: var(--muted); text-decoration: line-through; text-decoration-color: var(--line); }
+.compare { color: var(--muted); max-width: 80ch; }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+@media (max-width: 720px) {
+  .colhead { display: none; }
+  .step { grid-template-columns: 1fr; }
+  .cell.expect { border-left: 0; border-top: 1px solid var(--line); }
+}
+@media (prefers-reduced-motion: reduce) { .progress > div { transition: none; } }
+</style>
+
+<div class="wrap">
+  <header>
+    <h1>ABAP Skills Demo</h1>
+    <p class="intro">Copy each prompt into GitHub Copilot Chat in VS Code, in order. The keywords in each prompt (DEV-200, company, ZCONFIG_CONS, ATC, NAST ...) make Copilot load the matching skill by itself. Tick what you see in the answer.</p>
+  </header>
+  <div class="setup"><h3>Before you start</h3><ol><li>Connect DEV-200 in ABAP FS.</li><li>In the chat bar choose <strong>Local</strong> mode (selector at the bottom of the chat). In Copilot mode skills are off while the chat folder is DEV-200.</li><li>Customizations → Skills lists the 7 <code>abap-*</code> skills from <code>%USERPROFILE%\.agents\skills</code>.</li><li>Start one new chat and run the steps in order; later steps use the class from step 3.</li><li>Alternative that needs no mode switch: run the same prompts in the Copilot CLI (<code>copilot</code> in a terminal) from any local folder while VS Code and ABAP FS stay connected. It uses the same skills and the abap-fs MCP server.</li></ol></div>
+  <div class="bar">
+    <div class="progress" aria-hidden="true"><div id="pbar"></div></div>
+    <span class="count" id="count">0 / 49 checked</span>
+    <button type="button" class="ghost" id="reset">Clear ticks</button>
+  </div>
+  <div class="colhead"><div>Prompt</div><div>Expected results</div></div>
+  <div class="steps">
+<section class="step" id="step-1">
+  <div class="cell prompt">
+    <div class="steph"><span class="num">1</span><h2>Check the connection</h2></div>
+    <pre class="ptext" id="p1">abap-fs: show which SAP systems are connected and use DEV-200 for this chat. Do not change anything.</pre>
+    <button type="button" class="copy" data-target="p1">Copy prompt</button>
+  </div>
+  <div class="cell expect">
+    <div class="chips"><span class="chip">abap-fs</span></div>
+    <ul class="checks"><li><label><input type="checkbox" id="s1e1" data-k="s1e1"><span>Lists the connected systems; DEV-200 is one of them.</span></label></li><li><label><input type="checkbox" id="s1e2" data-k="s1e2"><span>Changes nothing.</span></label></li></ul>
+  </div>
+</section>
+<section class="step" id="step-2">
+  <div class="cell prompt">
+    <div class="steph"><span class="num">2</span><h2>Create a local package</h2></div>
+    <pre class="ptext" id="p2">On DEV-200, first check whether the local package $ZSKILL_DEMO already exists. If not, create it with the description &quot;Copilot skills demo&quot;. It is a $ package, so no transport request is needed.</pre>
+    <button type="button" class="copy" data-target="p2">Copy prompt</button>
+  </div>
+  <div class="cell expect">
+    <div class="chips"><span class="chip">abap-fs</span></div>
+    <ul class="checks"><li><label><input type="checkbox" id="s2e1" data-k="s2e1"><span>Checks first whether $ZSKILL_DEMO already exists.</span></label></li><li><label><input type="checkbox" id="s2e2" data-k="s2e2"><span>Creates it without asking for a transport request.</span></label></li><li><label><input type="checkbox" id="s2e3" data-k="s2e3"><span>If the tool cannot create packages, says so plainly and asks you to create it in SE21 instead of pretending.</span></label></li></ul>
+  </div>
+</section>
+<section class="step" id="step-3">
+  <div class="cell prompt">
+    <div class="steph"><span class="num">3</span><h2>Create a global class</h2></div>
+    <pre class="ptext" id="p3">In package $ZSKILL_DEMO on DEV-200, create the global class ZCL_SKILL_DEMO (FINAL, CREATE PUBLIC) for ticket DEMO-1 following company standards. Public method CHECK_PLANT with importing IV_WERKS and returning RV_ALLOWED. Leave the method empty for now, activate the class and show me the source.</pre>
+    <button type="button" class="copy" data-target="p3">Copy prompt</button>
+  </div>
+  <div class="cell expect">
+    <div class="chips"><span class="chip">abap-fs</span><span class="chip">abap-company-code</span><span class="chip">abap-guidelines</span></div>
+    <ul class="checks"><li><label><input type="checkbox" id="s3e1" data-k="s3e1"><span>company flower box directly after METHOD check_plant. (85 characters wide, * in column 1).</span></label></li><li><label><input type="checkbox" id="s3e2" data-k="s3e2"><span>Asks for TCode, author, FSD and TR, or leaves placeholders and says so; invents nothing.</span></label></li><li><label><input type="checkbox" id="s3e3" data-k="s3e3"><span>No MOD-001 line (new development).</span></label></li><li><label><input type="checkbox" id="s3e4" data-k="s3e4"><span>ABAP Doc &quot;! &lt;p class=&quot;shorttext synchronized&quot;&gt; before the method declaration.</span></label></li><li><label><input type="checkbox" id="s3e5" data-k="s3e5"><span>Class is FINAL; empty method has a comment and RETURN.</span></label></li><li><label><input type="checkbox" id="s3e6" data-k="s3e6"><span>Activates, re-reads the source, and reports activation separately.</span></label></li></ul>
+  </div>
+</section>
+<section class="step" id="step-4">
+  <div class="cell prompt">
+    <div class="steph"><span class="num">4</span><h2>Read allowed plants from configuration</h2></div>
+    <pre class="ptext" id="p4">In ZCL_SKILL_DEMO on DEV-200, implement CHECK_PLANT: read the allowed plants from the company constants table ZCONFIG_CONS (name WERKS) and return abap_true only if IV_WERKS is allowed. Activate it.</pre>
+    <button type="button" class="copy" data-target="p4">Copy prompt</button>
+  </div>
+  <div class="cell expect">
+    <div class="chips"><span class="chip">abap-company-config</span><span class="chip">abap-guidelines</span></div>
+    <ul class="checks"><li><label><input type="checkbox" id="s4e1" data-k="s4e1"><span>Calls zcl_config_constants=&gt;get_range_values, no SELECT on ZCONFIG_CONS.</span></label></li><li><label><input type="checkbox" id="s4e2" data-k="s4e2"><span>Passes iv_progname as a constant (the class name).</span></label></li><li><label><input type="checkbox" id="s4e3" data-k="s4e3"><span>Range typed as rseloption.</span></label></li><li><label><input type="checkbox" id="s4e4" data-k="s4e4"><span>Empty range handled (an empty range would allow every plant).</span></label></li><li><label><input type="checkbox" id="s4e5" data-k="s4e5"><span>Constants grouped with BEGIN OF ... END OF; result set with xsdbool( ).</span></label></li><li><label><input type="checkbox" id="s4e6" data-k="s4e6"><span>Tells you the row to create in client 100 with the config maintenance transaction (PROGNAME, NAME, LOW).</span></label></li></ul>
+  </div>
+</section>
+<section class="step" id="step-5">
+  <div class="cell prompt">
+    <div class="steph"><span class="num">5</span><h2>Add an SQL method</h2></div>
+    <pre class="ptext" id="p5">Add a public method GET_PO_TOTALS to ZCL_SKILL_DEMO on DEV-200. It gets a table of purchase order numbers and returns the total net value of the not-deleted EKPO items per purchase order. Activate it.</pre>
+    <button type="button" class="copy" data-target="p5">Copy prompt</button>
+  </div>
+  <div class="cell expect">
+    <div class="chips"><span class="chip">abap-hana-sql</span><span class="chip">abap-guidelines</span></div>
+    <ul class="checks"><li><label><input type="checkbox" id="s5e1" data-k="s5e1"><span>INNER JOIN @itab with ##ITAB_KEY_IN_SELECT instead of FOR ALL ENTRIES.</span></label></li><li><label><input type="checkbox" id="s5e2" data-k="s5e2"><span>Removes duplicate PO numbers before the join, or explains that duplicates double the SUM.</span></label></li><li><label><input type="checkbox" id="s5e3" data-k="s5e3"><span>CHECK it_... IS NOT INITIAL as the first statement.</span></label></li><li><label><input type="checkbox" id="s5e4" data-k="s5e4"><span>sy-subrc IS INITIAL / IS NOT INITIAL, never = 0 / &lt;&gt; 0.</span></label></li><li><label><input type="checkbox" id="s5e5" data-k="s5e5"><span>Prefixes: it_ / rt_ parameters, lt_ / ls_ locals, &lt;lfs_...&gt; field symbols.</span></label></li></ul>
+  </div>
+</section>
+<section class="step" id="step-6">
+  <div class="cell prompt">
+    <div class="steph"><span class="num">6</span><h2>Add messages</h2></div>
+    <pre class="ptext" id="p6">In ZCL_SKILL_DEMO on DEV-200, add an error message &#x27;Plant &amp;1 is not allowed&#x27; (with the plant number) when the plant is not allowed, and a warning when the plant configuration is empty. Activate it.</pre>
+    <button type="button" class="copy" data-target="p6">Copy prompt</button>
+  </div>
+  <div class="cell expect">
+    <div class="chips"><span class="chip">abap-guidelines</span></div>
+    <ul class="checks"><li><label><input type="checkbox" id="s6e1" data-k="s6e1"><span>Texts like &#x27;Plant &amp;1 is not allowed&#x27;(e01) and &#x27;...&#x27;(w01), not TEXT-001.</span></label></li><li><label><input type="checkbox" id="s6e2" data-k="s6e2"><span>Creates the text symbols in the class text pool.</span></label></li><li><label><input type="checkbox" id="s6e3" data-k="s6e3"><span>&amp;1 placeholder kept in a constant.</span></label></li><li><label><input type="checkbox" id="s6e4" data-k="s6e4"><span>All messages go through one message( ) method; callers read them from a READ-ONLY attribute, no getter.</span></label></li></ul>
+  </div>
+</section>
+<section class="step" id="step-7">
+  <div class="cell prompt">
+    <div class="steph"><span class="num">7</span><h2>Write and run unit tests</h2></div>
+    <pre class="ptext" id="p7">Write ABAP Unit tests for ZCL_SKILL_DEMO on DEV-200 and run them.</pre>
+    <button type="button" class="copy" data-target="p7">Copy prompt</button>
+  </div>
+  <div class="cell expect">
+    <div class="chips"><span class="chip">abap-guidelines</span><span class="chip">abap-fs</span></div>
+    <ul class="checks"><li><label><input type="checkbox" id="s7e1" data-k="s7e1"><span>No cl_osql_test_environment, no TEST-SEAM.</span></label></li><li><label><input type="checkbox" id="s7e2" data-k="s7e2"><span>Test class named lcl_test_*, FOR TESTING DURATION SHORT RISK LEVEL HARMLESS.</span></label></li><li><label><input type="checkbox" id="s7e3" data-k="s7e3"><span>Cases: plant not allowed, empty input, empty configuration, duplicate input; says which paths it could not test (e.g. an allowed plant while no config rows exist).</span></label></li><li><label><input type="checkbox" id="s7e4" data-k="s7e4"><span>Actually runs the tests and reports passed / failed counts.</span></label></li></ul>
+  </div>
+</section>
+<section class="step" id="step-8">
+  <div class="cell prompt">
+    <div class="steph"><span class="num">8</span><h2>Run the ATC checks</h2></div>
+    <pre class="ptext" id="p8">Run the ATC checks required before sending ZCL_SKILL_DEMO to test on DEV-200 and show the results as a table.</pre>
+    <button type="button" class="copy" data-target="p8">Copy prompt</button>
+  </div>
+  <div class="cell expect">
+    <div class="chips"><span class="chip">abap-company-code</span><span class="chip">abap-fs</span></div>
+    <ul class="checks"><li><label><input type="checkbox" id="s8e1" data-k="s8e1"><span>Runs all 4 variants: Z_NAMING_ALL, PERFORMANCE_CHECKLIST, DEFAULT, Z_EPC.</span></label></li><li><label><input type="checkbox" id="s8e2" data-k="s8e2"><span>Passes variantName and objectType CLAS/OC, and confirms the variant used in each result.</span></label></li><li><label><input type="checkbox" id="s8e3" data-k="s8e3"><span>Shows a table of finding counts per variant.</span></label></li><li><label><input type="checkbox" id="s8e4" data-k="s8e4"><span>Fixes findings or hides them with the documented pragma.</span></label></li></ul>
+  </div>
+</section>
+<section class="step" id="step-9">
+  <div class="cell prompt">
+    <div class="steph"><span class="num">9</span><h2>Create an executable report</h2></div>
+    <pre class="ptext" id="p9">In package $ZSKILL_DEMO on DEV-200, create the executable report ZR_SKILL_DEMO that lists purchase orders for a plant, following company standards. Activate it and tell me what is still needed before users can start it.</pre>
+    <button type="button" class="copy" data-target="p9">Copy prompt</button>
+  </div>
+  <div class="cell expect">
+    <div class="chips"><span class="chip">abap-company-code</span><span class="chip">abap-guidelines</span></div>
+    <ul class="checks"><li><label><input type="checkbox" id="s9e1" data-k="s9e1"><span>Flower box above REPORT.</span></label></li><li><label><input type="checkbox" id="s9e2" data-k="s9e2"><span>INITIALIZATION with AUTHORITY_CHECK_TCODE as the first event (CodeProfiler).</span></label></li><li><label><input type="checkbox" id="s9e3" data-k="s9e3"><span>Logic in a local class, no FORM routines.</span></label></li><li><label><input type="checkbox" id="s9e4" data-k="s9e4"><span>Block title as &#x27;Text&#x27;(t01).</span></label></li><li><label><input type="checkbox" id="s9e5" data-k="s9e5"><span>Mentions that a Z transaction must be created in SE93 (not possible through ADT).</span></label></li></ul>
+  </div>
+</section>
+<section class="step" id="step-10">
+  <div class="cell prompt">
+    <div class="steph"><span class="num">10</span><h2>Change it as production code</h2></div>
+    <pre class="ptext" id="p10">Treat ZCL_SKILL_DEMO on DEV-200 as company production code: in CHECK_PLANT also allow plant PL06 without reading the configuration. Activate it.</pre>
+    <button type="button" class="copy" data-target="p10">Copy prompt</button>
+  </div>
+  <div class="cell expect">
+    <div class="chips"><span class="chip">abap-company-code</span></div>
+    <ul class="checks"><li><label><input type="checkbox" id="s10e1" data-k="s10e1"><span>Finds no earlier MOD number and uses MOD-001 (or asks).</span></label></li><li><label><input type="checkbox" id="s10e2" data-k="s10e2"><span>One marker style: &quot;MOD-001++ / &quot;MOD-001-- for a single line, or one Begin/End block.</span></label></li><li><label><input type="checkbox" id="s10e3" data-k="s10e3"><span>Adds one Modification Log line; invents no date, TR or name.</span></label></li><li><label><input type="checkbox" id="s10e4" data-k="s10e4"><span>Changes no other lines.</span></label></li></ul>
+  </div>
+</section>
+<section class="step" id="step-11">
+  <div class="cell prompt">
+    <div class="steph"><span class="num">11</span><h2>Ask about IDoc output</h2></div>
+    <pre class="ptext" id="p11">Our NAST output type ZOUT shows green but no IDoc is created. Where should I look? Answer only, do not change anything.</pre>
+    <button type="button" class="copy" data-target="p11">Copy prompt</button>
+  </div>
+  <div class="cell expect">
+    <div class="chips"><span class="chip">abap-idoc-nast-output</span></div>
+    <ul class="checks"><li><label><input type="checkbox" id="s11e1" data-k="s11e1"><span>A RETURN before the return code is set (status 0 = processed, without an IDoc).</span></label></li><li><label><input type="checkbox" id="s11e2" data-k="s11e2"><span>Condition records vs. an exit or strategy table that don&#x27;t match.</span></label></li><li><label><input type="checkbox" id="s11e3" data-k="s11e3"><span>PARAMETERS ... DEFAULT not applied when NAST calls the FORM.</span></label></li><li><label><input type="checkbox" id="s11e4" data-k="s11e4"><span>Tables to check: TNAPR, T685B, EDP13; IDoc status 29 and 26.</span></label></li></ul>
+  </div>
+</section>
+<section class="step" id="step-12">
+  <div class="cell prompt">
+    <div class="steph"><span class="num">12</span><h2>Clean up</h2></div>
+    <pre class="ptext" id="p12">On DEV-200, delete the demo objects ZR_SKILL_DEMO and ZCL_SKILL_DEMO and then the package $ZSKILL_DEMO.</pre>
+    <button type="button" class="copy" data-target="p12">Copy prompt</button>
+  </div>
+  <div class="cell expect">
+    <div class="chips"><span class="chip">abap-fs</span></div>
+    <ul class="checks"><li><label><input type="checkbox" id="s12e1" data-k="s12e1"><span>ABAP FS has no delete tool: Copilot says so instead of improvising.</span></label></li><li><label><input type="checkbox" id="s12e2" data-k="s12e2"><span>Lists the manual steps: delete the report, then the class (SE80 or ADT), then the empty package.</span></label></li></ul>
+  </div>
+</section></div>
+  <div class="compare"><h3>Compare without skills</h3><p>To see the difference, run the same steps once more without skills: rename <code>%USERPROFILE%\.agents\skills</code> to <code>skills-off</code>, reload VS Code, use new names (e.g. <code>$ZSKILL_DEMO2</code>, <code>ZCL_SKILL_DEMO2</code>), and compare the ticks. Rename it back afterwards.</p></div>
+</div>
+
+<script>
+(function () {
+  const KEY = "abap-skills-demo-ticks";
+  let state = {};
+  try { state = JSON.parse(localStorage.getItem(KEY) || "{}") || {}; } catch (e) { state = {}; }
+  const boxes = Array.from(document.querySelectorAll(".checks input"));
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {} }
+  function refresh() {
+    const done = boxes.filter(b => b.checked).length;
+    document.getElementById("count").textContent = done + " / " + boxes.length + " checked";
+    document.getElementById("pbar").style.width = (boxes.length ? done / boxes.length * 100 : 0) + "%";
+    document.querySelectorAll(".step").forEach(s => {
+      const b = s.querySelectorAll(".checks input");
+      s.classList.toggle("complete", b.length > 0 && Array.from(b).every(x => x.checked));
+    });
+  }
+  boxes.forEach(b => { b.checked = !!state[b.dataset.k];
+    b.addEventListener("change", () => { state[b.dataset.k] = b.checked; save(); refresh(); }); });
+  document.getElementById("reset").addEventListener("click", () => { state = {}; boxes.forEach(b => b.checked = false); save(); refresh(); });
+  document.querySelectorAll(".copy").forEach(btn => btn.addEventListener("click", () => {
+    const el = document.getElementById(btn.dataset.target);
+    const text = el.textContent;
+    const ok = () => { btn.textContent = "Copied"; btn.classList.add("ok");
+      setTimeout(() => { btn.textContent = "Copy prompt"; btn.classList.remove("ok"); }, 1500); };
+    const fallback = () => { const r = document.createRange(); r.selectNodeContents(el);
+      const s = getSelection(); s.removeAllRanges(); s.addRange(r); btn.textContent = "Selected, press Ctrl+C"; };
+    try { navigator.clipboard.writeText(text).then(ok, fallback); } catch (e) { fallback(); }
+  }));
+  refresh();
+})();
+</script>
+
+</body>
+</html>
