@@ -234,59 +234,59 @@ button:focus-visible, input:focus-visible, nav.tabs a:focus-visible { outline: 2
 </div>
 <div class="panel" data-tab="badi" id="panel-badi">
   <header><h1>BADI boilerplate</h1><p class="intro">One prompt creates a complete BADI with an implicit enhancement: interface, enhancement spot and BADI definition, implementing class, BADI implementation with filter, the enhancement in your FORM, and the exit row. Copilot does it by running report ZBADI_GENERATOR (skill abap-badi-boilerplate).</p></header>
-  <div class="setup"><h3>Before you start</h3><ol><li>Same setup as the skills demo: DEV-200 connected, chat in <strong>Local</strong> mode (or the Copilot CLI from a local folder).</li><li>Pick an unused dev ID and exit ID. The generator creates the local package <code>$&lt;PREFIX&gt;_&lt;DEV_ID&gt;</code>; a name that was used before can fail with “already versioned”.</li><li>The run writes objects and a <code>ZCONFIG_EXIT1</code> row in the logged-on client (200). There is no delete tool, so use test names.</li></ol></div>
+  <div class="setup"><h3>Before you start</h3><ol><li>Same setup as the skills demo: DEV-200 connected, chat in <strong>Local</strong> mode (or the Copilot CLI from a local folder).</li><li>Use your own unused dev ID and exit ID. The generator creates the local package <code>$&lt;PREFIX&gt;_&lt;DEV_ID&gt;</code>; a name that was used before can fail with “already versioned”.</li><li>Write the prompt the way you would ask a colleague. If something required is missing (exit fields, RICEF), Copilot asks before it changes anything; just answer.</li><li>The run creates objects and a <code>ZCONFIG_EXIT1</code> row (client-independent, not on a transport). There is no delete tool, so use test names.</li></ol></div>
   <div class="bar"><div class="progress" aria-hidden="true"><div></div></div><span class="count">0 checked</span>
     <button type="button" class="ghost reset">Clear ticks</button></div>
   <div class="colhead"><div>Prompt</div><div>Expected results</div></div>
   <div class="steps">
 <section class="step" id="badi-step-1">
   <div class="cell prompt">
-    <div class="steph"><span class="num">1</span><h2>Check the prerequisites</h2></div>
-    <pre class="ptext" id="badi-p1">abap-fs dev-200: check that program ZTEST_BOILERPLATE has a FORM TEST_FORM5 and that the exit ID ZTEST_BP_ABC1 is still free. Do not change anything.</pre>
+    <div class="steph"><span class="num">1</span><h2>Ask for the BADI</h2></div>
+    <pre class="ptext" id="badi-p1">Create a new BADI on DEV-200:
+- prefix OTC, dev ID TST_BD5
+- enhancement in TEST_FORM5 in program ZTEST_BOILERPLATE
+- exit ID ZTEST_BP_ABC1</pre>
     <button type="button" class="copy" data-target="badi-p1">Copy prompt</button>
   </div>
   <div class="cell expect">
-    <div class="chips"><span class="chip">abap-fs</span></div>
-    <ul class="checks"><li><label><input type="checkbox" id="badi-s1e1" data-k="badi-s1e1"><span>Finds FORM test_form5 in ZTEST_BOILERPLATE (with its line).</span></label></li><li><label><input type="checkbox" id="badi-s1e2" data-k="badi-s1e2"><span>Confirms that ZCONFIG_EXIT1 has no row for ZTEST_BP_ABC1.</span></label></li><li><label><input type="checkbox" id="badi-s1e3" data-k="badi-s1e3"><span>Changes nothing.</span></label></li></ul>
+    <div class="chips"><span class="chip">abap-badi-boilerplate</span><span class="chip">abap-fs</span></div>
+    <ul class="checks"><li><label><input type="checkbox" id="badi-s1e1" data-k="badi-s1e1"><span>Loads the abap-badi-boilerplate skill by itself.</span></label></li><li><label><input type="checkbox" id="badi-s1e2" data-k="badi-s1e2"><span>Changes nothing yet and asks for the two values it may not invent: exit fields and RICEF.</span></label></li><li><label><input type="checkbox" id="badi-s1e3" data-k="badi-s1e3"><span>Says which values it will use for the rest: description, method CHECK, filter, BEGIN of TEST_FORM5.</span></label></li></ul>
   </div>
 </section>
 <section class="step" id="badi-step-2">
   <div class="cell prompt">
-    <div class="steph"><span class="num">2</span><h2>Create the BADI boilerplate</h2></div>
-    <pre class="ptext" id="badi-p2">Create a new BADI boilerplate on DEV-200:
-- prefix OTC, dev ID TST_BD2
-- enhancement at the beginning of FORM TEST_FORM5 in program ZTEST_BOILERPLATE
-- exit ID ZTEST_BP_ABC1, fields BUKRS, ticket DEMO-2</pre>
+    <div class="steph"><span class="num">2</span><h2>Answer Copilot&#x27;s question</h2></div>
+    <pre class="ptext" id="badi-p2">fields BUKRS, ticket DEMO-2</pre>
     <button type="button" class="copy" data-target="badi-p2">Copy prompt</button>
   </div>
   <div class="cell expect">
     <div class="chips"><span class="chip">abap-badi-boilerplate</span><span class="chip">abap-fs</span></div>
-    <ul class="checks"><li><label><input type="checkbox" id="badi-s2e1" data-k="badi-s2e1"><span>Runs report ZBADI_GENERATOR through a temporary unit-test harness instead of creating objects one by one.</span></label></li><li><label><input type="checkbox" id="badi-s2e2" data-k="badi-s2e2"><span>Dry run first; the real run only after a clean dry run.</span></label></li><li><label><input type="checkbox" id="badi-s2e3" data-k="badi-s2e3"><span>Proposes the values you did not give (method CHECK, filter, description) and says which it chose.</span></label></li><li><label><input type="checkbox" id="badi-s2e4" data-k="badi-s2e4"><span>Package $OTC_TST_BD2 with 5 objects: ZIF_, ZCL_, ZES_ (with ZBDD_), ZEI_ (with ZBDI_) and ZIENH_OTC_TST_BD2.</span></label></li><li><label><input type="checkbox" id="badi-s2e5" data-k="badi-s2e5"><span>Exit row ZTEST_BP_ABC1 with BUKRS in ZCONFIG_EXIT1, and names the client (200, not transported).</span></label></li><li><label><input type="checkbox" id="badi-s2e6" data-k="badi-s2e6"><span>Removes the harness again and verifies with SQL: TADIR, DWINACTIV empty, BADI_IMPL, ENHHEADER.</span></label></li><li><label><input type="checkbox" id="badi-s2e7" data-k="badi-s2e7"><span>If the real run fails, reports the messages and does not repeat it with the same names.</span></label></li></ul>
+    <ul class="checks"><li><label><input type="checkbox" id="badi-s2e1" data-k="badi-s2e1"><span>Adds a temporary unit-test harness to ZBADI_GENERATOR instead of creating objects one by one.</span></label></li><li><label><input type="checkbox" id="badi-s2e2" data-k="badi-s2e2"><span>Dry run first (“all checks passed, nothing created”); the real run only after a clean dry run.</span></label></li><li><label><input type="checkbox" id="badi-s2e3" data-k="badi-s2e3"><span>Package $OTC_TST_BD5 with ZIF_, ZCL_, ZES_ (with ZBDD_), ZEI_ (with ZBDI_) and ZIENH_OTC_TST_BD5.</span></label></li><li><label><input type="checkbox" id="badi-s2e4" data-k="badi-s2e4"><span>Exit row ZTEST_BP_ABC1 with BUKRS in ZCONFIG_EXIT1, not transported.</span></label></li><li><label><input type="checkbox" id="badi-s2e5" data-k="badi-s2e5"><span>Removes the harness, re-activates the report and confirms no ltc_ is left.</span></label></li><li><label><input type="checkbox" id="badi-s2e6" data-k="badi-s2e6"><span>Verifies with SQL (TADIR, DWINACTIV, exit row) and says which checks it skipped.</span></label></li></ul>
   </div>
 </section>
 <section class="step" id="badi-step-3">
   <div class="cell prompt">
-    <div class="steph"><span class="num">3</span><h2>Look at the generated code</h2></div>
-    <pre class="ptext" id="badi-p3">Open the new class ZCL_OTC_TST_BD2 and the enhancement ZIENH_OTC_TST_BD2 in VS Code and summarise what each one contains. Do not change anything.</pre>
+    <div class="steph"><span class="num">3</span><h2>Look at the result</h2></div>
+    <pre class="ptext" id="badi-p3">open the class and the enhancement in VS Code, what&#x27;s inside?</pre>
     <button type="button" class="copy" data-target="badi-p3">Copy prompt</button>
   </div>
   <div class="cell expect">
     <div class="chips"><span class="chip">abap-fs</span></div>
-    <ul class="checks"><li><label><input type="checkbox" id="badi-s3e1" data-k="badi-s3e1"><span>Opens both objects in VS Code.</span></label></li><li><label><input type="checkbox" id="badi-s3e2" data-k="badi-s3e2"><span>Class: implements IF_BADI_INTERFACE and ZIF_OTC_TST_BD2; method CHECK is only a BREAK-POINT stub.</span></label></li><li><label><input type="checkbox" id="badi-s3e3" data-k="badi-s3e3"><span>Enhancement: company header, get_exits( ) for ZTEST_BP_ABC1, then GET BADI … FILTERS process and CALL BADI …-&gt;CHECK.</span></label></li></ul>
+    <ul class="checks"><li><label><input type="checkbox" id="badi-s3e1" data-k="badi-s3e1"><span>Opens both objects in VS Code.</span></label></li><li><label><input type="checkbox" id="badi-s3e2" data-k="badi-s3e2"><span>Class: implements IF_BADI_INTERFACE and ZIF_OTC_TST_BD5; CHECK is only a BREAK-POINT stub.</span></label></li><li><label><input type="checkbox" id="badi-s3e3" data-k="badi-s3e3"><span>Enhancement: company header with ticket DEMO-2 and the placeholders still open ({TCODE}, {TR} …).</span></label></li><li><label><input type="checkbox" id="badi-s3e4" data-k="badi-s3e4"><span>get_exits( ) for ZTEST_BP_ABC1 with iv_fval1 commented out, then GET BADI … FILTERS process and CALL BADI …-&gt;CHECK.</span></label></li></ul>
   </div>
 </section>
 <section class="step" id="badi-step-4">
   <div class="cell prompt">
-    <div class="steph"><span class="num">4</span><h2>Ask what config is missing</h2></div>
-    <pre class="ptext" id="badi-p4">What configuration is still needed so that the new BADI from exit ZTEST_BP_ABC1 is actually called for company code 1000? Answer only, do not change anything.</pre>
+    <div class="steph"><span class="num">4</span><h2>Ask what is missing</h2></div>
+    <pre class="ptext" id="badi-p4">what else do I need so it runs for company code 1000? don&#x27;t change anything</pre>
     <button type="button" class="copy" data-target="badi-p4">Copy prompt</button>
   </div>
   <div class="cell expect">
     <div class="chips"><span class="chip">abap-company-config</span></div>
-    <ul class="checks"><li><label><input type="checkbox" id="badi-s4e1" data-k="badi-s4e1"><span>A ZCONFIG_EXIT2 row: EXITID, FIELDVALUE1 = 1000, ENHTYPE B, CLASSNAME = the BADI definition, BADI_FILTER = the implementation filter, ACTIVE_FLAG X.</span></label></li><li><label><input type="checkbox" id="badi-s4e2" data-k="badi-s4e2"><span>Put the row on a transport by hand (R3TR TABU ZCONFIG_EXIT2).</span></label></li><li><label><input type="checkbox" id="badi-s4e3" data-k="badi-s4e3"><span>Spots that iv_fval1 is commented out in the enhancement, so a filled 1000 would never match.</span></label></li><li><label><input type="checkbox" id="badi-s4e4" data-k="badi-s4e4"><span>Mentions the BREAK-POINT stub and that GET_EXITS buffers per session.</span></label></li></ul>
+    <ul class="checks"><li><label><input type="checkbox" id="badi-s4e1" data-k="badi-s4e1"><span>A ZCONFIG_EXIT2 row: EXITID, FIELDVALUE1 = 1000, ENHTYPE B, CLASSNAME = ZBDD_OTC_TST_BD5, BADI_FILTER, ACTIVE_FLAG X.</span></label></li><li><label><input type="checkbox" id="badi-s4e2" data-k="badi-s4e2"><span>Spots that iv_fval1 is commented out, so a row for 1000 would never match; pass the company code there.</span></label></li><li><label><input type="checkbox" id="badi-s4e3" data-k="badi-s4e3"><span>Real logic in the BREAK-POINT stub; test in a new session (GET_EXITS buffers).</span></label></li><li><label><input type="checkbox" id="badi-s4e4" data-k="badi-s4e4"><span>Put the UEXIT1/UEXIT2 rows on a transport by hand (R3TR TABU). Changes nothing.</span></label></li></ul>
   </div>
 </section></div>
-  <div class="compare"><h3>Why a skill for this</h3><p>Creating a BADI by hand means SE24, SE18, SE19, an implicit enhancement and an SM30 row, in the right order. The skill turns that into one report run with a dry run first and SQL checks at the end, and it stops cleanly when something is wrong.</p></div>
+  <div class="compare"><h3>Why a skill for this</h3><p>Creating a BADI by hand means SE24, SE18, SE19, an implicit enhancement and an SM30 row, in the right order. The skill turns that into one report run with a dry run first and SQL checks at the end. It asks for what only you can know (exit fields, RICEF) instead of inventing it.</p></div>
 </div>
   </main>
 </div>
