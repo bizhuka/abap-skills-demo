@@ -87,7 +87,7 @@ button:focus-visible, input:focus-visible, nav.tabs a:focus-visible { outline: 2
 <div class="shell">
   <nav class="tabs" aria-label="Guides">
     <div class="brand">ABAP Skills Demo</div>
-    <a href="#demo" data-tab="demo"><span>Skills demo</span><span class="cnt"></span></a><a href="#badi" data-tab="badi"><span>BADI boilerplate</span><span class="cnt"></span></a>
+    <a href="#demo" data-tab="demo"><span>Skills demo</span><span class="cnt"></span></a><a href="#badi" data-tab="badi"><span>BADI boilerplate</span><span class="cnt"></span></a><a href="#review" data-tab="review"><span>Code review</span><span class="cnt"></span></a>
   </nav>
   <main>
     
@@ -287,6 +287,59 @@ button:focus-visible, input:focus-visible, nav.tabs a:focus-visible { outline: 2
   </div>
 </section></div>
   <div class="compare"><h3>Why a skill for this</h3><p>Creating a BADI by hand means SE24, SE18, SE19, an implicit enhancement and an SM30 row, in the right order. The skill turns that into one report run with a dry run first and SQL checks at the end. It asks for what only you can know (exit fields, RICEF) instead of inventing it.</p></div>
+</div>
+<div class="panel" data-tab="review" id="panel-review">
+  <header><h1>Code review</h1><p class="intro">Ask Copilot to review a development before it goes to test. The abap-code-review skill reads the real source, runs ATC and SQL checks, ranks findings P1 (critical) to P4 (suggestion) and gives a verdict. It changes nothing.</p></header>
+  <div class="setup"><h3>Before you start</h3><ol><li>Same setup as the skills demo: DEV-200 connected, chat in <strong>Local</strong> mode (or the Copilot CLI from a local folder).</li><li>Pick a development to review. The test used package <code>$ZREVIEW_DEMO</code> (ticket DEMO-3: BADI class, interface, enhancement, a tRFC function module and a hook in <code>a customer exit include</code>).</li><li>Ask the way you would ask a colleague. Correct Copilot when it gets something wrong; it re-checks and updates the finding.</li><li>The review is read-only. Copilot fixes findings only if you ask for it.</li></ol></div>
+  <div class="bar"><div class="progress" aria-hidden="true"><div></div></div><span class="count">0 checked</span>
+    <button type="button" class="ghost reset">Clear ticks</button></div>
+  <div class="colhead"><div>Prompt</div><div>Expected results</div></div>
+  <div class="steps">
+<section class="step" id="review-step-1">
+  <div class="cell prompt">
+    <div class="steph"><span class="num">1</span><h2>Ask for the review</h2></div>
+    <pre class="ptext" id="review-p1">review my DEMO-3 development on DEV-200 before it goes to test, package $ZREVIEW_DEMO</pre>
+    <button type="button" class="copy" data-target="review-p1">Copy prompt</button>
+  </div>
+  <div class="cell expect">
+    <div class="chips"><span class="chip">abap-code-review</span><span class="chip">abap-fs</span></div>
+    <ul class="checks"><li><label><input type="checkbox" id="review-s1e1" data-k="review-s1e1"><span>Loads abap-code-review by itself and reads every object of the package, plus the hook in a customer exit include.</span></label></li><li><label><input type="checkbox" id="review-s1e2" data-k="review-s1e2"><span>Runs ATC with all 4 variants and shows the counts as a table.</span></label></li><li><label><input type="checkbox" id="review-s1e3" data-k="review-s1e3"><span>Header with scope, evidence (what was run and what was not), verdict and counts per P-level.</span></label></li><li><label><input type="checkbox" id="review-s1e4" data-k="review-s1e4"><span>Verdict NOT READY FOR TEST with P2 findings: transport, missing MOD markers / header placeholders, a tRFC vs update-task race, hardcoded values, no unit tests.</span></label></li><li><label><input type="checkbox" id="review-s1e5" data-k="review-s1e5"><span>Lists open questions instead of guessing, and changes nothing.</span></label></li></ul>
+  </div>
+</section>
+<section class="step" id="review-step-2">
+  <div class="cell prompt">
+    <div class="steph"><span class="num">2</span><h2>Correct a mistake</h2></div>
+    <pre class="ptext" id="review-p2">DEMO-3 is the RICEF, not a user. there should be a TR for it, check #1 again</pre>
+    <button type="button" class="copy" data-target="review-p2">Copy prompt</button>
+  </div>
+  <div class="cell expect">
+    <div class="chips"><span class="chip">abap-code-review</span><span class="chip">abap-fs</span></div>
+    <ul class="checks"><li><label><input type="checkbox" id="review-s2e1" data-k="review-s2e1"><span>Admits the wrong search (by owner instead of RICEF) and searches the transport texts.</span></label></li><li><label><input type="checkbox" id="review-s2e2" data-k="review-s2e2"><span>Finds the RICEF TR DEVK900264 (empty) and the package TR DEVK900093 (only a customer exit include).</span></label></li><li><label><input type="checkbox" id="review-s2e3" data-k="review-s2e3"><span>Rewrites finding #1: the development objects and the UEXIT2 rows are on no TR; says what to move where.</span></label></li><li><label><input type="checkbox" id="review-s2e4" data-k="review-s2e4"><span>Keeps the verdict and the other findings unchanged.</span></label></li></ul>
+  </div>
+</section>
+<section class="step" id="review-step-3">
+  <div class="cell prompt">
+    <div class="steph"><span class="num">3</span><h2>Look at a finding in the code</h2></div>
+    <pre class="ptext" id="review-p3">show me the race in #3 in VS Code</pre>
+    <button type="button" class="copy" data-target="review-p3">Copy prompt</button>
+  </div>
+  <div class="cell expect">
+    <div class="chips"><span class="chip">abap-fs</span></div>
+    <ul class="checks"><li><label><input type="checkbox" id="review-s3e1" data-k="review-s3e1"><span>Opens ZCL_EQUI_MOVE in VS Code.</span></label></li><li><label><input type="checkbox" id="review-s3e2" data-k="review-s3e2"><span>Points to the tRFC call at the end of UPDATE and the JEST check (I0045) at the start of MOVE_EQUIPMENT.</span></label></li><li><label><input type="checkbox" id="review-s3e3" data-k="review-s3e3"><span>Explains the timing: the tRFC can start before the update task writes TECO, so the equipment is silently not moved.</span></label></li><li><label><input type="checkbox" id="review-s3e4" data-k="review-s3e4"><span>Says it traced the race from the code and did not reproduce it; suggests a fix.</span></label></li></ul>
+  </div>
+</section>
+<section class="step" id="review-step-4">
+  <div class="cell prompt">
+    <div class="steph"><span class="num">4</span><h2>Get a note for the developer</h2></div>
+    <pre class="ptext" id="review-p4">write a short note to the developer with the P2 points, I&#x27;ll send it myself</pre>
+    <button type="button" class="copy" data-target="review-p4">Copy prompt</button>
+  </div>
+  <div class="cell expect">
+    <div class="chips"><span class="chip">abap-code-review</span></div>
+    <ul class="checks"><li><label><input type="checkbox" id="review-s4e1" data-k="review-s4e1"><span>A short, polite note with subject line, the 5 P2 points and a concrete fix for each.</span></label></li><li><label><input type="checkbox" id="review-s4e2" data-k="review-s4e2"><span>Neutral wording, no blame; mentions that ATC is clean and there is no P1.</span></label></li><li><label><input type="checkbox" id="review-s4e3" data-k="review-s4e3"><span>Does not send anything itself.</span></label></li></ul>
+  </div>
+</section></div>
+  <div class="compare"><h3>With and without the skill</h3><p>Without the skill Copilot gives a generic list of style tips. With it the review checks the house rules (flower box, MOD markers, 4 ATC variants, config framework, transports), traces each finding to the caller before it claims a defect, says what it did not verify, and ends with a clear verdict: ready for test or not.</p></div>
 </div>
   </main>
 </div>
